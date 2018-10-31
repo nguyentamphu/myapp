@@ -1,16 +1,32 @@
 version: '3'
 
 services:
+  # db:
+  #   container_name: myapp_db
+  #   image: mysql:5.7
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=tinhokok
+  #   ports:
+  #     - 3307:3306
+  #   command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
+  #   healthcheck:
+  #     test: exit 0
+
   db:
-    container_name: myapp_db
-    image: mysql:5.7
+    container_name: myapp_mariadb
+    image: mariadb:10.1
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=tinhokok
+
+  apache:
+    container_name: apache
+    image: httpd:2
     ports:
-      - 3307:3306
-    command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
-    healthcheck:
-      test: exit 0
+      - 8080:80
+      - 8081:3000
+    volumes:
+      - .:/myapp
 
   web:
     build: .
@@ -20,7 +36,11 @@ services:
     command: bundle exec rails s
     links:
       - db
+      - apache
     depends_on:
       - db
+      - apache
     volumes:
       - ".:/myapp"
+    tty: true
+    stdin_open: true
