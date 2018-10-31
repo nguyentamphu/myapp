@@ -19,28 +19,15 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=tinhokok
 
-  apache:
-    container_name: apache
-    image: httpd:2
-    ports:
-      - 8080:80
-      - 8081:3000
-    volumes:
-      - .:/myapp
-
   web:
     build: .
-    container_name: myapp
     ports:
-      - 4000:3000
-    command: bundle exec rails s
+      - "80:80"
+    env_file:
+      - .env
     links:
       - db
-      - apache
-    depends_on:
-      - db
-      - apache
     volumes:
-      - ".:/myapp"
+      - ".:/home/app/webapp"
     tty: true
     stdin_open: true
