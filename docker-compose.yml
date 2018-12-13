@@ -1,26 +1,29 @@
 version: '3'
 
 services:
-  db:
-    container_name: myapp_db
+  graphql_db:
+    container_name: graphql_db
     image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD=tinhokok
+      - MYSQL_ROOT_PASSWORD=phunt123!@#
     ports:
       - 3307:3306
     command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
     healthcheck:
       test: exit 0
 
-  web:
-    build: .
-    container_name: myapp
+  graphql_web:
+    build:
+      context: .
+      args:
+        tag: "2.5.3"
+    container_name: graphql_web
     ports:
-      - 4000:3000
-    command: bundle exec rails s
+      - 3000:3000
+    command: bundle exec rails s -b0
     links:
-      - db
+      - graphql_db
     depends_on:
-      - db
+      - graphql_db
     volumes:
-      - ".:/myapp"
+      - ".:/root/graphql"
