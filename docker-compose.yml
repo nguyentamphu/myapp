@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db:
+    container_name: myapp_db
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=p@ssw0rd
+    ports:
+      - 3307:3306
+    command: [mysqld, --character-set-server=utf8, --collation-server=utf8_unicode_ci]
+    healthcheck:
+      test: exit 0
+
+  web:
+    build: .
+    container_name: myapp
+    ports:
+      - 4000:3000
+    command: /bin/bash
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - ".:/root/myapp"
+    stdin_open: true
+    tty: true
