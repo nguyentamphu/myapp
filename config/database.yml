@@ -9,20 +9,25 @@
 # And be sure to use new-style password hashing:
 #   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
 #
-default: &default
-  adapter: mysql2
-  encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password: p@ssw0rd
-  host: myapp_db
+# default: &default
+#   adapter: mysql2
+#   encoding: utf8mb4
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   username: root
+#   password: root
+#   host: 192.168.70.106
 
 development:
-  <<: *default
-  database: myapp_development
-
-production:
-  <<: *default
-  database: myapp_production
-  username: myapp
-  password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
+  primary:
+    adapter: mysql2
+    database: myapp_dev_primary
+    username: root
+    password: root
+    host: 192.168.33.11
+  primary_replica:
+    adapter: mysql2
+    database: myapp_dev_primary
+    username: root
+    password: root
+    replica: true
+    host: 192.168.33.12
